@@ -60,7 +60,6 @@
     #no {
       background: #ff758f;
       color: white;
-      position: absolute;
       transition: left 0.35s ease-out, top 0.35s ease-out;
     }
 
@@ -107,6 +106,20 @@
       font-size: clamp(1.2rem, 4vw, 1.5rem);
       line-height: 1.5;
     }
+
+    .love-content {
+      max-width: 420px;
+    }
+
+    .love-photo {
+      width: 100%;
+      max-width: 280px;
+      border-radius: 20px;
+      margin: 16px auto 20px;
+      display: block;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
   </style>
 </head>
 <body>
@@ -125,39 +138,63 @@
         You just made my Valentine’s Day perfect 💖<br/>
         I can’t wait to spend it with you 🥰
       </p>
+      <img
+        src="photos/IMG_9802.jpeg"
+        alt="Us ❤️"
+        class="love-photo"
+        />
     </div>
   </div>
 
+  <audio id="bgMusic" loop>
+    <source src="songs/Raindance.mp3" type="audio/mpeg">
+  </audio>
+
+
   <script>
+
+    let hasMoved = false;
+
+    const bgMusic = document.getElementById("bgMusic");
+
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
     const overlay = document.getElementById("loveScreen");
 
     const container = document.querySelector(".container");
 
-function moveNoButton() {
-  const padding = 20;
+    function moveNoButton() {
+  
+        if (!hasMoved) {
+            hasMoved = true;
+            // switch to absolute positioning only after first move
+            noBtn.style.position = "absolute";
+        }
 
-  const maxX = Math.max(
-    0,
-    container.clientWidth - noBtn.offsetWidth - padding
-  );
-  const maxY = Math.max(
-    0,
-    container.clientHeight - noBtn.offsetHeight - padding
-  );
+        const padding = 20;
+        const container = document.querySelector(".container");
 
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
+        const maxX = Math.max(
+            0,
+            container.clientWidth - noBtn.offsetWidth - padding
+        );
+        const maxY = Math.max(
+            0,
+            container.clientHeight - noBtn.offsetHeight - padding
+        );
 
-  noBtn.style.left = `${x}px`;
-  noBtn.style.top = `${y}px`;
-}
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+
+        noBtn.style.left = `${x}px`;
+        noBtn.style.top = `${y}px`;
+    }
 
 
     // Desktop + mobile runaway
-    noBtn.addEventListener("mouseenter", moveNoButton);
-    noBtn.addEventListener("touchstart", moveNoButton);
+    noBtn.addEventListener("mouseenter", activateNoButton);
+    noBtn.addEventListener("touchstart", activateNoButton);
+    noBtn.addEventListener("click", activateNoButton);
 
     function explodeHearts(x, y) {
       for (let i = 0; i < 30; i++) {
@@ -182,7 +219,23 @@ function moveNoButton() {
       }, 500);
     });
 
-    moveNoButton();
+        let musicStarted = false;
+
+    function startBackgroundMusic() {
+        if (!musicStarted) {
+            bgMusic.volume = 0.5;
+            bgMusic.play().catch(() => {});
+            musicStarted = true;
+        }
+    }
+
+    function activateNoButton() {
+        moveNoButton();
+    }
+
+
+    document.addEventListener("click", startBackgroundMusic, { once: true });
+    document.addEventListener("touchstart", startBackgroundMusic, { once: true });
   </script>
 
 </body>
