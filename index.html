@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Be My Valentine?</title>
+
+  <!-- Romantic font -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff4d6d, #ffb3c6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Pacifico', cursive;
+    }
+
+    .container {
+      text-align: center;
+      color: white;
+      padding: 20px;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 7vw, 3rem);
+      margin-bottom: 32px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 1.4rem;
+      padding: 14px 32px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    #yes {
+      background: white;
+      color: #ff4d6d;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+
+    #no {
+      background: #ff758f;
+      color: white;
+      position: absolute;
+      transition: left 0.35s ease-out, top 0.35s ease-out;
+    }
+
+    /* Hearts */
+    .heart {
+      position: fixed;
+      font-size: 24px;
+      pointer-events: none;
+      animation: floatUp 1.5s ease-out forwards;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-140px) scale(1.6);
+        opacity: 0;
+      }
+    }
+
+    /* Love message overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 77, 109, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      padding: 24px;
+      z-index: 10;
+      display: none;
+    }
+
+    .overlay h2 {
+      font-size: clamp(2rem, 7vw, 3rem);
+      margin-bottom: 20px;
+    }
+
+    .overlay p {
+      font-size: clamp(1.2rem, 4vw, 1.5rem);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Will you be my Valentine? 💕</h1>
+    <button id="yes">Yes 💖</button>
+    <button id="no">No 💔</button>
+  </div>
+
+  <div class="overlay" id="loveScreen">
+    <div>
+      <h2>💌 Yes 💖 💌</h2>
+      <p>
+        Msghana, I’m so happy you said yes.<br/>
+        You just made my Valentine’s Day perfect 💖<br/>
+        I can’t wait to spend it with you 🥰
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("no");
+    const yesBtn = document.getElementById("yes");
+    const overlay = document.getElementById("loveScreen");
+
+    const container = document.querySelector(".container");
+
+function moveNoButton() {
+  const padding = 20;
+
+  const maxX = Math.max(
+    0,
+    container.clientWidth - noBtn.offsetWidth - padding
+  );
+  const maxY = Math.max(
+    0,
+    container.clientHeight - noBtn.offsetHeight - padding
+  );
+
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+
+  noBtn.style.left = `${x}px`;
+  noBtn.style.top = `${y}px`;
+}
+
+
+    // Desktop + mobile runaway
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("touchstart", moveNoButton);
+
+    function explodeHearts(x, y) {
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = "💖";
+        heart.style.left = x + (Math.random() * 120 - 60) + "px";
+        heart.style.top = y + (Math.random() * 60 - 30) + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1500);
+      }
+    }
+
+    yesBtn.addEventListener("click", (e) => {
+      explodeHearts(
+        e.clientX || window.innerWidth / 2,
+        e.clientY || window.innerHeight / 2
+      );
+
+      setTimeout(() => {
+        overlay.style.display = "flex";
+      }, 500);
+    });
+
+    moveNoButton();
+  </script>
+
+</body>
+</html>
